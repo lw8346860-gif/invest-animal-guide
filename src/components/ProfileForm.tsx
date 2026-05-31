@@ -1,0 +1,142 @@
+import { useState } from 'react';
+
+export type Profile = {
+  nickname: string;
+  market: string;
+  experience: string;
+  style: string;
+};
+
+interface ProfileFormProps {
+  onSubmit: (profile: Profile) => void;
+  onBack: () => void;
+}
+
+const marketOptions = ['A股', '港股', '美股', '基金', '固收/债券', '加密资产', '什么都看一点'];
+const experienceOptions = ['1年以内', '1—3年', '3—5年', '5—10年', '10年以上'];
+const styleOptions = ['价值', '成长', '趋势', '套利', '宏观', '高股息', '我也不知道，账户自己有想法'];
+
+export default function ProfileForm({ onSubmit, onBack }: ProfileFormProps) {
+  const [nickname, setNickname] = useState('');
+  const [market, setMarket] = useState('');
+  const [experience, setExperience] = useState('');
+  const [style, setStyle] = useState('');
+
+  const canSubmit = nickname.trim() && market && experience && style;
+
+  const handleSubmit = () => {
+    if (canSubmit) {
+      onSubmit({ nickname: nickname.trim(), market, experience, style });
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center px-5 py-10">
+      <div className="w-full max-w-md">
+        {/* Back */}
+        <button
+          onClick={onBack}
+          className="mb-6 text-sm text-[#555] hover:text-[#111] transition-colors cursor-pointer bg-transparent border-none flex items-center gap-1"
+        >
+          ← 返回
+        </button>
+
+        <h2 className="text-xl font-bold mb-1">先认识一下你</h2>
+        <p className="text-sm text-[#888] mb-8">填完基本信息，开始答题</p>
+
+        {/* Nickname */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-[#333] mb-2">昵称</label>
+          <input
+            type="text"
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
+            placeholder="输入你的昵称"
+            maxLength={20}
+            className="w-full px-4 py-3 rounded-lg bg-white border border-[#e0e0e0] text-sm text-[#111] outline-none transition-colors focus:border-[#00ff88] placeholder:text-[#bbb]"
+          />
+        </div>
+
+        {/* Market preference */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-[#333] mb-2">投资市场偏好</label>
+          <div className="flex flex-wrap gap-2">
+            {marketOptions.map(opt => (
+              <button
+                key={opt}
+                onClick={() => setMarket(opt)}
+                className={`px-3 py-2 rounded-lg text-sm border cursor-pointer transition-all ${
+                  market === opt
+                    ? 'border-[#00ff88] bg-[#00ff88]/10 text-[#111] font-medium'
+                    : 'border-[#e0e0e0] bg-white text-[#555] hover:border-[#ccc]'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Experience */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-[#333] mb-2">投资年限</label>
+          <div className="flex flex-wrap gap-2">
+            {experienceOptions.map(opt => (
+              <button
+                key={opt}
+                onClick={() => setExperience(opt)}
+                className={`px-3 py-2 rounded-lg text-sm border cursor-pointer transition-all ${
+                  experience === opt
+                    ? 'border-[#00ff88] bg-[#00ff88]/10 text-[#111] font-medium'
+                    : 'border-[#e0e0e0] bg-white text-[#555] hover:border-[#ccc]'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Style */}
+        <div className="mb-8">
+          <label className="block text-sm font-medium text-[#333] mb-2">自认为风格</label>
+          <div className="flex flex-wrap gap-2">
+            {styleOptions.map(opt => (
+              <button
+                key={opt}
+                onClick={() => setStyle(opt)}
+                className={`px-3 py-2 rounded-lg text-sm border cursor-pointer transition-all ${
+                  style === opt
+                    ? 'border-[#00ff88] bg-[#00ff88]/10 text-[#111] font-medium'
+                    : 'border-[#e0e0e0] bg-white text-[#555] hover:border-[#ccc]'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Submit */}
+        <button
+          onClick={handleSubmit}
+          disabled={!canSubmit}
+          className={`w-full py-3.5 rounded-xl text-base font-semibold transition-all duration-200 border-none ${
+            canSubmit
+              ? 'cursor-pointer'
+              : 'cursor-not-allowed opacity-40'
+          }`}
+          style={{
+            background: canSubmit
+              ? 'linear-gradient(135deg, #00ff88, #00cc6a)'
+              : '#e0e0e0',
+            color: canSubmit ? '#111' : '#999',
+            boxShadow: canSubmit ? '0 4px 14px rgba(0, 255, 136, 0.3)' : 'none',
+          }}
+        >
+          开始答题
+        </button>
+      </div>
+    </div>
+  );
+}
