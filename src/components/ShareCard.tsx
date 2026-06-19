@@ -29,7 +29,6 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
             测测你是什么投资物种
           </span>
         </div>
-        <span className="text-xs text-[#9ca3af]">物种卡</span>
       </div>
 
       {/* Body */}

@@ -205,7 +205,7 @@ export default function ResultPage({ species, profile, onRestart }: ResultPagePr
               <img src={imageUrl} alt={`${species.name}结果卡片`} className="w-full rounded-xl block" />
               <a
                 href={imageUrl}
-                download={`${species.name}-投资物种卡.png`}
+                download={`${species.name}-投资物种.png`}
                 className="secondary-button mt-3 block w-full py-3 rounded-xl text-center text-sm font-semibold"
               >
                 下载 PNG
