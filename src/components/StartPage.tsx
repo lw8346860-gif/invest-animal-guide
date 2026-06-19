@@ -11,7 +11,7 @@ export default function StartPage({ onStart, theme, onToggleTheme }: StartPagePr
     <div className="start-screen min-h-screen px-5 py-6">
       <div className="w-full max-w-md mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <div className="brand-pill">INVESTMENT ANIMAL GUIDE</div>
+          <div className="brand-pill">测测你是什么投资物种</div>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
 
@@ -39,7 +39,7 @@ export default function StartPage({ onStart, theme, onToggleTheme }: StartPagePr
         </div>
 
         <div className="text-center">
-          <h1 className="hero-title mb-3">投资动物自测指南</h1>
+          <h1 className="hero-title mb-3">测测你是什么投资物种</h1>
           <h2 className="hero-subtitle mb-5">
             你的钱，在市场里到底像什么动物？
           </h2>

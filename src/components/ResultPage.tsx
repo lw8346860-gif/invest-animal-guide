@@ -65,59 +65,20 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 
 function drawAnimal(ctx: CanvasRenderingContext2D, species: Species, x: number, y: number, size: number) {
   const visual = getAnimalVisual(species.id);
-  const gradient = ctx.createLinearGradient(x, y, x + size, y + size);
-  gradient.addColorStop(0, visual.colors[0]);
-  gradient.addColorStop(1, visual.colors[1]);
-  roundRect(ctx, x, y, size, size, 34);
-  ctx.fillStyle = gradient;
-  ctx.fill();
-
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.strokeStyle = 'rgba(17,17,17,.58)';
-  ctx.lineWidth = 5;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(size * .18, size * .78);
-  ctx.bezierCurveTo(size * .35, size * .6, size * .75, size * .62, size * .9, size * .78);
-  ctx.stroke();
-
-  ctx.fillStyle = visual.archetype === 'crow' || visual.archetype === 'mole' ? '#111827' : visual.accent;
-  ctx.beginPath();
-  ctx.ellipse(size * .5, size * .53, size * .26, size * .22, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = '#f5c518';
-  ctx.lineWidth = 6;
-  ctx.beginPath();
-  if (['trend-bird', 'growth-cheetah', 'leverage-flamingo'].includes(species.id)) {
-    ctx.moveTo(size * .2, size * .82);
-    ctx.lineTo(size * .82, size * .22);
-    ctx.moveTo(size * .72, size * .2);
-    ctx.lineTo(size * .85, size * .2);
-    ctx.lineTo(size * .84, size * .34);
-  } else if (species.id === 'leader-whale') {
-    ctx.moveTo(size * .37, size * .25);
-    ctx.lineTo(size * .5, size * .1);
-    ctx.lineTo(size * .63, size * .25);
-  } else if (species.id === 'arbitrage-otter') {
-    ctx.moveTo(size * .28, size * .28);
-    ctx.lineTo(size * .72, size * .28);
-    ctx.moveTo(size * .38, size * .28);
-    ctx.lineTo(size * .28, size * .46);
-    ctx.moveTo(size * .62, size * .28);
-    ctx.lineTo(size * .72, size * .46);
-  } else {
-    ctx.arc(size * .74, size * .3, size * .14, 0, Math.PI * 2);
-  }
-  ctx.stroke();
-
-  ctx.fillStyle = '#fff';
-  ctx.beginPath();
-  ctx.arc(size * .42, size * .5, 4, 0, Math.PI * 2);
-  ctx.arc(size * .58, size * .5, 4, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+  return loadImage(`${import.meta.env.BASE_URL}animal-atlas.jpg`).then((atlas) => {
+    const tile = atlas.naturalWidth / 4;
+    const col = visual.atlasIndex % 4;
+    const row = Math.floor(visual.atlasIndex / 4);
+    ctx.save();
+    roundRect(ctx, x, y, size, size, 34);
+    ctx.clip();
+    ctx.drawImage(atlas, col * tile, row * tile, tile, tile, x, y, size, size);
+    ctx.restore();
+    roundRect(ctx, x, y, size, size, 34);
+    ctx.strokeStyle = 'rgba(17,17,17,.16)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  });
 }
 
 async function createResultImage(species: Species, profile: Profile) {
@@ -130,8 +91,8 @@ async function createResultImage(species: Species, profile: Profile) {
   ctx.fillStyle = '#f6f1e8';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#111';
-  ctx.font = '700 26px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('INVESTMENT ANIMAL GUIDE', 76, 92);
+  ctx.font = '800 30px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText('测测你是什么投资物种', 76, 92);
   ctx.fillStyle = '#00b86b';
   ctx.fillRect(76, 112, 280, 8);
 
@@ -142,54 +103,23 @@ async function createResultImage(species: Species, profile: Profile) {
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  drawAnimal(ctx, species, 76, 188, 260);
+  await drawAnimal(ctx, species, 96, 188, 888);
   ctx.fillStyle = '#777';
   ctx.font = '500 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText(`鉴定对象：${profile.nickname}`, 374, 218);
+  ctx.fillText(`鉴定对象：${profile.nickname}`, 96, 1120);
   ctx.fillStyle = '#111';
   ctx.font = '900 66px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText(species.name, 374, 304);
+  ctx.fillText(species.name, 96, 1204);
   ctx.fillStyle = '#555';
   ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  wrapText(ctx, `“${species.feature}”`, 374, 362, 560, 44, 3);
+  wrapText(ctx, `“${species.feature}”`, 96, 1262, 888, 44, 2);
 
   ctx.strokeStyle = '#00cc6a';
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(76, 500);
-  ctx.lineTo(1004, 500);
+  ctx.moveTo(96, 1348);
+  ctx.lineTo(984, 1348);
   ctx.stroke();
-
-  ctx.fillStyle = '#111';
-  ctx.font = '800 34px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('投资优势', 76, 570);
-  ctx.fillStyle = '#333';
-  ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  let y = wrapText(ctx, species.advantage, 76, 620, 900, 46, 5);
-
-  ctx.fillStyle = '#111';
-  ctx.font = '800 34px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('需要留意', 76, y + 54);
-  ctx.fillStyle = '#555';
-  ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  y = wrapText(ctx, species.watchout, 76, y + 104, 900, 46, 4);
-
-  ctx.fillStyle = '#111';
-  ctx.font = '800 34px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('更像的投资人', 76, y + 58);
-  ctx.fillStyle = '#111';
-  ctx.font = '900 40px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText(species.investor, 76, y + 112);
-  ctx.fillStyle = '#666';
-  ctx.font = '500 26px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  y = wrapText(ctx, species.investorBrief, 76, y + 156, 900, 40, 3);
-
-  roundRect(ctx, 76, y + 36, 900, 116, 24);
-  ctx.fillStyle = '#fff8db';
-  ctx.fill();
-  ctx.fillStyle = '#111';
-  ctx.font = '700 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  wrapText(ctx, `“${species.quote}”`, 108, y + 86, 830, 40, 2);
 
   const qr = await loadImage(`${import.meta.env.BASE_URL}qrcode.png`);
   ctx.drawImage(qr, 76, 1364, 124, 124);
@@ -215,7 +145,7 @@ export default function ResultPage({ species, profile, onRestart }: ResultPagePr
 
   const handleShare = async () => {
     // Try to copy the quote as a simple share mechanism
-    const text = `我在「投资动物自测指南」里测出了投资物种：${species.name}！\n\n"${species.quote}"\n\n来测测你是什么动物？\n${SITE_URL}`;
+    const text = `我在「测测你是什么投资物种」里测出了：${species.name}！\n\n"${species.quote}"\n\n来测测你的投资物种。\n${SITE_URL}`;
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -275,7 +205,7 @@ export default function ResultPage({ species, profile, onRestart }: ResultPagePr
               <img src={imageUrl} alt={`${species.name}结果卡片`} className="w-full rounded-xl block" />
               <a
                 href={imageUrl}
-                download={`${species.name}-投资动物卡.png`}
+                download={`${species.name}-投资物种卡.png`}
                 className="secondary-button mt-3 block w-full py-3 rounded-xl text-center text-sm font-semibold"
               >
                 下载 PNG

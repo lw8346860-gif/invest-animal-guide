@@ -26,10 +26,10 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
         <div className="flex items-center gap-2">
           <span className="inline-block w-3 h-3 rounded-full bg-[#00ff88]" />
           <span className="text-xs font-medium text-[#00ff88] tracking-wider">
-            投资动物物种卡
+            测测你是什么投资物种
           </span>
         </div>
-        <span className="text-xs text-[#9ca3af]">ANIMAL SPECIES CARD</span>
+        <span className="text-xs text-[#9ca3af]">物种卡</span>
       </div>
 
       {/* Body */}
@@ -39,14 +39,14 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
           鉴定对象：<span className="card-title font-medium">{profile.nickname}</span>
         </div>
 
-        <div className="mb-5 flex items-start gap-4">
-          <AnimalPortrait speciesId={species.id} size="md" />
-          <div className="min-w-0 pt-1">
+        <div className="mb-5">
+          <AnimalPortrait speciesId={species.id} size="hero" />
+          <div className="pt-5">
             <div className="card-muted text-xs mb-1">你的投资物种</div>
-            <h2 className="card-title text-3xl font-black tracking-tight mb-2">
+            <h2 className="card-title text-4xl font-black tracking-tight mb-2">
               {species.name}
             </h2>
-            <p className="card-muted text-sm italic">"{species.feature}"</p>
+            <p className="card-muted text-sm italic leading-relaxed">"{species.feature}"</p>
           </div>
         </div>
 
@@ -128,8 +128,8 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
 
       {/* Footer */}
       <div className="card-footer px-5 py-3 flex items-center justify-between">
-        <span className="text-xs">投资动物自测指南 · 仅供娱乐</span>
-        <span className="text-xs">16 SPECIES</span>
+        <span className="text-xs">测测你是什么投资物种 · 仅供娱乐</span>
+        <span className="text-xs">16 种物种</span>
       </div>
     </div>
   );
