@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Species } from '../data/species';
 import { getAnimalVisual } from '../data/animalVisuals';
 import type { Profile } from './ProfileForm';
-import ShareCard from './ShareCard';
 
 interface ResultPageProps {
   species: Species;
@@ -72,7 +71,11 @@ function drawAnimal(ctx: CanvasRenderingContext2D, species: Species, x: number, 
     ctx.save();
     roundRect(ctx, x, y, size, size, 34);
     ctx.clip();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.filter = 'contrast(1.06) saturate(1.08)';
     ctx.drawImage(atlas, col * tile, row * tile, tile, tile, x, y, size, size);
+    ctx.filter = 'none';
     ctx.restore();
     roundRect(ctx, x, y, size, size, 34);
     ctx.strokeStyle = 'rgba(17,17,17,.16)';
@@ -84,7 +87,7 @@ function drawAnimal(ctx: CanvasRenderingContext2D, species: Species, x: number, 
 async function createResultImage(species: Species, profile: Profile) {
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
-  canvas.height = 1680;
+  canvas.height = 2160;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('canvas unsupported');
 
@@ -96,52 +99,107 @@ async function createResultImage(species: Species, profile: Profile) {
   ctx.fillStyle = '#00b86b';
   ctx.fillRect(76, 112, 280, 8);
 
-  roundRect(ctx, 58, 150, 964, 1380, 44);
+  roundRect(ctx, 58, 150, 964, 1880, 44);
   ctx.fillStyle = '#ffffff';
   ctx.fill();
   ctx.strokeStyle = '#ded7ca';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  await drawAnimal(ctx, species, 96, 188, 888);
+  await drawAnimal(ctx, species, 190, 198, 700);
+
   ctx.fillStyle = '#777';
   ctx.font = '500 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText(`鉴定对象：${profile.nickname}`, 96, 1120);
+  ctx.fillText(`鉴定对象：${profile.nickname}`, 96, 964);
   ctx.fillStyle = '#111';
-  ctx.font = '900 66px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText(species.name, 96, 1204);
+  ctx.font = '900 70px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText(species.name, 96, 1050);
   ctx.fillStyle = '#555';
-  ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  wrapText(ctx, `“${species.feature}”`, 96, 1262, 888, 44, 2);
+  ctx.font = '600 34px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  wrapText(ctx, `“${species.feature}”`, 96, 1112, 888, 46, 2);
 
   ctx.strokeStyle = '#00cc6a';
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(96, 1348);
-  ctx.lineTo(984, 1348);
+  ctx.moveTo(96, 1218);
+  ctx.lineTo(984, 1218);
   ctx.stroke();
 
-  const qr = await loadImage(`${import.meta.env.BASE_URL}qrcode.png`);
-  ctx.drawImage(qr, 76, 1364, 124, 124);
+  ctx.fillStyle = '#111';
+  ctx.font = '800 30px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText('更像的投资人', 96, 1282);
+  ctx.fillStyle = '#00a862';
+  ctx.font = '900 42px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText(species.investor, 96, 1338);
+  ctx.fillStyle = '#555';
+  ctx.font = '500 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  let nextY = wrapText(ctx, species.investorBrief, 96, 1388, 888, 38, 3);
+
+  nextY += 28;
   ctx.fillStyle = '#111';
   ctx.font = '800 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('长按识别二维码，测测你的投资物种', 226, 1408);
+  ctx.fillText('投资优势', 96, nextY);
+  ctx.fillStyle = '#555';
+  ctx.font = '500 26px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  nextY = wrapText(ctx, species.advantage, 96, nextY + 42, 888, 36, 2);
+
+  nextY += 24;
+  ctx.fillStyle = '#111';
+  ctx.font = '800 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText('需要留意', 96, nextY);
+  ctx.fillStyle = '#555';
+  ctx.font = '500 26px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  nextY = wrapText(ctx, species.watchout, 96, nextY + 42, 888, 36, 2);
+
+  nextY += 36;
+  ctx.fillStyle = '#111';
+  ctx.font = '800 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText('一句话结论', 96, nextY);
+  ctx.fillStyle = '#555';
+  ctx.font = '500 26px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  wrapText(ctx, `“${species.quote}”`, 96, nextY + 42, 888, 36, 2);
+
+  const qr = await loadImage(`${import.meta.env.BASE_URL}qrcode.png`);
+  ctx.drawImage(qr, 76, 1868, 124, 124);
+  ctx.fillStyle = '#111';
+  ctx.font = '800 28px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+  ctx.fillText('长按识别二维码，测测你的投资物种', 226, 1912);
   ctx.fillStyle = '#666';
   ctx.font = '500 22px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  wrapText(ctx, SITE_URL, 226, 1450, 680, 30, 2);
+  wrapText(ctx, SITE_URL, 226, 1954, 680, 30, 2);
 
   ctx.fillStyle = '#aaa';
   ctx.font = '500 22px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
-  ctx.fillText('本测试仅供娱乐和自我观察，不构成任何投资建议。', 76, 1594);
+  ctx.fillText('本测试仅供娱乐和自我观察，不构成任何投资建议。', 76, 2090);
 
   return canvas.toDataURL('image/png');
 }
 
 export default function ResultPage({ species, profile, onRestart }: ResultPageProps) {
-  const shareRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    setGenerating(true);
+    setImageUrl('');
+
+    createResultImage(species, profile)
+      .then((url) => {
+        if (alive) setImageUrl(url);
+      })
+      .catch(() => {
+        if (alive) setImageUrl('');
+      })
+      .finally(() => {
+        if (alive) setGenerating(false);
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [profile.experience, profile.market, profile.nickname, profile.style, species.id]);
 
   const handleShare = async () => {
     // Try to copy the quote as a simple share mechanism
@@ -163,24 +221,21 @@ export default function ResultPage({ species, profile, onRestart }: ResultPagePr
     }
   };
 
-  const handleGenerateImage = async () => {
-    setGenerating(true);
-    try {
-      const url = await createResultImage(species, profile);
-      setImageUrl(url);
-      window.setTimeout(() => {
-        document.getElementById('save-card-preview')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 50);
-    } finally {
-      setGenerating(false);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col items-center px-5 py-8">
       <div className="w-full max-w-md">
-        {/* Result card */}
-        <ShareCard species={species} profile={profile} shareRef={shareRef} />
+        <div id="save-card-preview" className="save-preview rounded-2xl p-3">
+          {imageUrl ? (
+            <>
+              <img src={imageUrl} alt={`${species.name}结果卡片`} className="w-full rounded-xl block" />
+              <p className="muted-text text-xs text-center mt-3">长按保存</p>
+            </>
+          ) : (
+            <div className="min-h-[520px] flex items-center justify-center text-sm muted-text">
+              {generating ? '正在生成结果卡片...' : '结果卡片生成失败，请刷新后重试'}
+            </div>
+          )}
+        </div>
 
         {/* Buttons */}
         <div className="mt-6 space-y-3">
@@ -190,28 +245,6 @@ export default function ResultPage({ species, profile, onRestart }: ResultPagePr
           >
             {copied ? '✓ 已复制到剪贴板' : '分享给朋友'}
           </button>
-
-          <button
-            onClick={handleGenerateImage}
-            disabled={generating}
-            className="secondary-button w-full py-3.5 rounded-xl text-base font-semibold transition-all duration-200 cursor-pointer"
-          >
-            {generating ? '正在生成保存图...' : '生成可长按保存的卡片'}
-          </button>
-
-          {imageUrl && (
-            <div id="save-card-preview" className="save-preview rounded-2xl p-3">
-              <p className="muted-text text-xs text-center mb-3">手机长按下方图片即可保存</p>
-              <img src={imageUrl} alt={`${species.name}结果卡片`} className="w-full rounded-xl block" />
-              <a
-                href={imageUrl}
-                download={`${species.name}-投资物种.png`}
-                className="secondary-button mt-3 block w-full py-3 rounded-xl text-center text-sm font-semibold"
-              >
-                下载 PNG
-              </a>
-            </div>
-          )}
 
           <button
             onClick={onRestart}

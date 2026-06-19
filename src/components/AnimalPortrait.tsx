@@ -35,6 +35,9 @@ export default function AnimalPortrait({ speciesId, size = 'md' }: AnimalPortrai
           height: '400%',
           left: `-${col * 100}%`,
           top: `-${row * 100}%`,
+          filter: 'contrast(1.06) saturate(1.08)',
+          transform: 'scale(1.015)',
+          transformOrigin: `${(col + 0.5) * 25}% ${(row + 0.5) * 25}%`,
         }}
         draggable={false}
       />
