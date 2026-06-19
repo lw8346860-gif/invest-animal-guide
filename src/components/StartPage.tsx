@@ -1,53 +1,69 @@
+import ThemeToggle from './ThemeToggle';
+
 interface StartPageProps {
   onStart: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
-export default function StartPage({ onStart }: StartPageProps) {
+export default function StartPage({ onStart, theme, onToggleTheme }: StartPageProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-5 py-12">
-      <div className="w-full max-w-md text-center">
-        {/* Logo / Brand */}
-        <div className="mb-8">
-          <div className="text-5xl mb-4">🐾</div>
-          <div
-            className="inline-block px-3 py-1 rounded-full text-xs font-medium tracking-wider mb-6"
-            style={{ background: 'linear-gradient(135deg, #00ff88, #f5c518)', color: '#111' }}
-          >
-            INVESTMENT ANIMAL GUIDE
+    <div className="start-screen min-h-screen px-5 py-6">
+      <div className="w-full max-w-md mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="brand-pill">INVESTMENT ANIMAL GUIDE</div>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        </div>
+
+        <div className="hero-orbit mb-8" aria-hidden="true">
+          <div className="market-card card-a">
+            <span>价值</span>
+            <b>APE</b>
+          </div>
+          <div className="market-card card-b">
+            <span>趋势</span>
+            <b>BIRD</b>
+          </div>
+          <div className="market-card card-c">
+            <span>现金流</span>
+            <b>HIPPO</b>
+          </div>
+          <div className="hero-core">
+            <div className="core-ring" />
+            <div className="core-mark">
+              <span className="core-line line-up" />
+              <span className="core-line line-mid" />
+              <span className="core-line line-down" />
+            </div>
           </div>
         </div>
 
-        {/* Title */}
-        <h1 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight">
-          投资动物自测指南
-        </h1>
-        <h2 className="text-lg sm:text-xl font-semibold mb-6 text-[#333]">
-          你的钱，在市场里到底像什么动物？
-        </h2>
+        <div className="text-center">
+          <h1 className="hero-title mb-3">投资动物自测指南</h1>
+          <h2 className="hero-subtitle mb-5">
+            你的钱，在市场里到底像什么动物？
+          </h2>
 
-        {/* Subtitle */}
-        <p className="text-sm text-[#555] leading-relaxed mb-10 max-w-sm mx-auto">
-          30道题，鉴定你的投资物种。看看你是价值考古猿、趋势候鸟，还是套利水獭。
-        </p>
+          <p className="hero-copy mb-8 max-w-sm mx-auto">
+            30 道题，测出你的投资物种。不是给你荐股，是给你的市场习性做一张可转发的人格卡。
+          </p>
+        </div>
 
-        {/* CTA Button */}
         <button
           onClick={onStart}
-          className="w-full max-w-xs mx-auto block py-3.5 px-8 rounded-xl text-base font-semibold transition-all duration-200 cursor-pointer border-none"
-          style={{
-            background: 'linear-gradient(135deg, #00ff88, #00cc6a)',
-            color: '#111',
-            boxShadow: '0 4px 14px rgba(0, 255, 136, 0.3)',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 255, 136, 0.45)')}
-          onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 255, 136, 0.3)')}
+          className="primary-button w-full max-w-xs mx-auto block py-3.5 px-8 rounded-xl text-base font-semibold transition-all duration-200 cursor-pointer border-none"
         >
           开始鉴定我的投资物种
         </button>
 
-        {/* Disclaimer */}
-        <p className="mt-10 text-xs text-[#999] leading-relaxed max-w-xs mx-auto">
-          本测试仅供娱乐和自我观察，不构成任何投资建议、理财建议、证券分析或买卖依据。市场有风险，动物园不背锅。
+        <div className="mt-8 grid grid-cols-3 gap-2">
+          <div className="stat-tile"><b>30</b><span>题</span></div>
+          <div className="stat-tile"><b>5</b><span>维度</span></div>
+          <div className="stat-tile"><b>16</b><span>物种</span></div>
+        </div>
+
+        <p className="disclaimer mt-8 text-xs leading-relaxed max-w-xs mx-auto text-center">
+          本测试仅供娱乐和自我观察，不构成任何投资建议、理财建议、证券分析或买卖依据。
         </p>
       </div>
     </div>

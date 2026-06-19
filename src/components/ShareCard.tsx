@@ -1,5 +1,8 @@
 import type { Species } from '../data/species';
 import type { Profile } from './ProfileForm';
+import AnimalPortrait from './AnimalPortrait';
+
+const SITE_URL = 'https://lw8346860-gif.github.io/invest-animal-guide/';
 
 interface ShareCardProps {
   species: Species;
@@ -11,11 +14,7 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
   return (
     <div
       ref={shareRef}
-      className="bg-white rounded-2xl overflow-hidden"
-      style={{
-        border: '1px solid #e0e0e0',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-      }}
+      className="share-card rounded-2xl overflow-hidden"
     >
       {/* Header strip */}
       <div
@@ -25,31 +24,30 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
         }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-lg">🐾</span>
+          <span className="inline-block w-3 h-3 rounded-full bg-[#00ff88]" />
           <span className="text-xs font-medium text-[#00ff88] tracking-wider">
             投资动物物种卡
           </span>
         </div>
-        <span className="text-xs text-[#666]">ANIMAL SPECIES CARD</span>
+        <span className="text-xs text-[#9ca3af]">ANIMAL SPECIES CARD</span>
       </div>
 
       {/* Body */}
       <div className="px-5 py-6">
         {/* Subject */}
-        <div className="text-xs text-[#888] mb-4">
-          鉴定对象：<span className="text-[#111] font-medium">{profile.nickname}</span>
+        <div className="card-muted text-xs mb-4">
+          鉴定对象：<span className="card-title font-medium">{profile.nickname}</span>
         </div>
 
-        {/* Species name */}
-        <div className="mb-5">
-          <div className="text-xs text-[#888] mb-1">你的投资物种</div>
-          <h2
-            className="text-3xl font-black tracking-tight mb-2"
-            style={{ color: '#111' }}
-          >
-            {species.name}
-          </h2>
-          <p className="text-sm text-[#555] italic">"{species.feature}"</p>
+        <div className="mb-5 flex items-start gap-4">
+          <AnimalPortrait speciesId={species.id} size="md" />
+          <div className="min-w-0 pt-1">
+            <div className="card-muted text-xs mb-1">你的投资物种</div>
+            <h2 className="card-title text-3xl font-black tracking-tight mb-2">
+              {species.name}
+            </h2>
+            <p className="card-muted text-sm italic">"{species.feature}"</p>
+          </div>
         </div>
 
         {/* Divider */}
@@ -65,11 +63,11 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
               className="inline-block w-1.5 h-1.5 rounded-full"
               style={{ background: '#00ff88' }}
             />
-            <span className="text-xs font-medium text-[#333] uppercase tracking-wider">
+            <span className="section-label text-xs font-medium uppercase tracking-wider">
               投资优势
             </span>
           </div>
-          <p className="text-sm text-[#333] leading-relaxed">
+          <p className="card-body text-sm leading-relaxed">
             {species.advantage}
           </p>
         </div>
@@ -81,59 +79,57 @@ export default function ShareCard({ species, profile, shareRef }: ShareCardProps
               className="inline-block w-1.5 h-1.5 rounded-full"
               style={{ background: '#ef4444' }}
             />
-            <span className="text-xs font-medium text-[#333] uppercase tracking-wider">
+            <span className="section-label text-xs font-medium uppercase tracking-wider">
               需要留意
             </span>
           </div>
-          <p className="text-sm text-[#555] leading-relaxed">
+          <p className="card-muted text-sm leading-relaxed">
             {species.watchout}
           </p>
         </div>
 
         {/* Divider */}
-        <div
-          className="h-px my-5"
-          style={{ background: 'linear-gradient(90deg, transparent, #e0e0e0)' }}
-        />
+        <div className="card-divider h-px my-5" />
 
         {/* Investor */}
         <div className="mb-4">
-          <div className="text-xs text-[#888] mb-1.5">更像的投资人</div>
-          <div className="text-lg font-bold text-[#111] mb-1.5">
+          <div className="card-muted text-xs mb-1.5">更像的投资人</div>
+          <div className="card-title text-lg font-bold mb-1.5">
             {species.investor}
           </div>
-          <p className="text-xs text-[#666] leading-relaxed">
+          <p className="card-muted text-xs leading-relaxed">
             {species.investorBrief}
           </p>
         </div>
 
         {/* Divider */}
-        <div
-          className="h-px my-5"
-          style={{ background: 'linear-gradient(90deg, transparent, #e0e0e0)' }}
-        />
+        <div className="card-divider h-px my-5" />
 
         {/* Quote */}
-        <div
-          className="rounded-xl px-4 py-3.5"
-          style={{ background: 'linear-gradient(135deg, #f5c518/10, #00ff88/5)', border: '1px solid #f5c518/20' }}
-        >
-          <div className="text-xs text-[#888] mb-1">转发短句</div>
-          <p className="text-sm font-medium text-[#111] italic">
+        <div className="quote-box rounded-xl px-4 py-3.5">
+          <div className="card-muted text-xs mb-1">转发短句</div>
+          <p className="card-title text-sm font-medium italic">
             "{species.quote}"
           </p>
         </div>
 
-        {/* Tie-breaking note */}
-        <p className="mt-4 text-xs text-[#999] text-center">
+        <div className="mt-5 flex items-center gap-3 rounded-xl border border-[#e5e7eb] bg-white p-3">
+          <img src={`${import.meta.env.BASE_URL}qrcode.png`} alt="测试入口二维码" className="w-16 h-16 rounded-lg shrink-0" />
+          <div className="min-w-0">
+            <div className="text-xs font-bold text-[#111] mb-1">长按识别二维码</div>
+            <div className="text-[10px] leading-snug text-[#666] break-all">{SITE_URL}</div>
+          </div>
+        </div>
+
+        <p className="card-muted mt-4 text-xs text-center">
           你不是单一动物，但动物园先抓住了你最明显的市场习性。
         </p>
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-3 border-t border-[#f0f0f0] flex items-center justify-between">
-        <span className="text-xs text-[#bbb]">投资动物自测指南 · 仅供娱乐</span>
-        <span className="text-xs text-[#bbb]">🐾</span>
+      <div className="card-footer px-5 py-3 flex items-center justify-between">
+        <span className="text-xs">投资动物自测指南 · 仅供娱乐</span>
+        <span className="text-xs">16 SPECIES</span>
       </div>
     </div>
   );
